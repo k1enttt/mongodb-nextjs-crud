@@ -14,15 +14,15 @@ import {
 import { 
   deleteMemberById, 
   updateMember 
-} from "@/actions/member";
+} from "@/data/db";
 
-export type MemberColumn = {
+export type MemberProps = {
     _id: string;
     name: string;
     age: number;
 }
 
-export const columns: ColumnDef<MemberColumn>[] = [
+export const columns: ColumnDef<MemberProps>[] = [
     {
       accessorKey: "_id",
       header: "ID",

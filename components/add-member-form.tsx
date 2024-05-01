@@ -15,6 +15,7 @@ import {
     FormMessage,
   } from "@/components/ui/form";
 import { Input } from "./ui/input";
+import { addMember } from "@/data/db";
 export const AddMemberForm = () => {
     const [isPending, startTransition] = useTransition();
     const form = useForm<z.infer<typeof MemberSchema>>({
@@ -27,7 +28,7 @@ export const AddMemberForm = () => {
 
     const handleSubmit = (values: z.infer<typeof MemberSchema>) => {
         startTransition(() => {
-          // addMember(values)
+          addMember(values);
         });
       };
 
@@ -40,7 +41,7 @@ export const AddMemberForm = () => {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>Name</FormLabel>
                   <FormControl>
                     <Input
                       disabled={isPending}
@@ -56,14 +57,15 @@ export const AddMemberForm = () => {
 
             <FormField
               control={form.control}
-              name="name"
+              name="age"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>Age</FormLabel>
                   <FormControl>
                     <Input 
                     disabled={isPending}
-                    placeholder="20" {...field} />
+                    type="number"
+                    {...field} />
                   </FormControl>           
                   <FormMessage />
                 </FormItem>

@@ -8,7 +8,7 @@ export const ContentWrapper = async () => {
     
     return (
         <div className="flex flex-col items-center gap-y-4">
-            <MemberTable columns={columns} data={JSON.parse(JSON.stringify(data.members))} />
+            <MemberTable columns={columns} data={JSON.parse(JSON.stringify(data.data))} />
             <AddMemberButton />
         </div>
     )
