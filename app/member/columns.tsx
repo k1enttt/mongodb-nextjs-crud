@@ -12,19 +12,19 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { 
-  deleteMember, 
+  deleteMemberById, 
   updateMember 
 } from "@/actions/member";
 
-export type Member = {
-    id: string;
+export type MemberColumn = {
+    _id: string;
     name: string;
     age: number;
 }
 
-export const columns: ColumnDef<Member>[] = [
+export const columns: ColumnDef<MemberColumn>[] = [
     {
-      accessorKey: "id",
+      accessorKey: "_id",
       header: "ID",
     },
     {
@@ -56,7 +56,7 @@ export const columns: ColumnDef<Member>[] = [
                 Sửa
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() => deleteMember(member.id)}
+                onClick={() => deleteMemberById(member._id)}
               >
                 Xóa
               </DropdownMenuItem>
