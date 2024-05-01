@@ -41,7 +41,6 @@ export const addMember = async ({
     name: string;
     age: number;
 }) => {
-    // TODO: Thêm dữ liệu
     const response = await collection.insertOne({
         _id: new ObjectId(),
         name,
@@ -66,7 +65,13 @@ export const updateMember = async (member: MemberProps) => {
 };
 
 export const deleteMemberById = async (id: string) => {
-    // TODO: Xóa dữ liệu theo id
+    const existingMember = await getMemberById(id);
+    if (!existingMember) {
+        console.log(`Không tìm thấy Member có id là ${id}`);
+        return;
+    }
+    await collection.deleteOne({ _id: new ObjectId(id) });
+
     console.log(`Đã xóa Member có id là ${id}`);
 };
 
