@@ -3,7 +3,7 @@ import { clientPromise } from "@/lib/db";
 import { MemberProps } from "@/app/member/columns";
 import { ObjectId } from "mongodb";
 
-let client, database, collection: any;
+let client: any, database, collection: any;
 
 async function run() {
     try {
@@ -20,17 +20,19 @@ async function run() {
 })();
 
 export async function getMembers() {
-    // TODO: Lấy hết dữ liệu
     if (!collection) await run();
     const data = await collection.find().toArray();
     console.log("Đã lấy hết dữ liệu! \n", data);
+
     return { data: data };
 }
 
 export const getMemberById = async (id: string) => {
-    // TODO: Lấy dữ liệu theo id
-    console.log(`Đã lấy dữ liệu theo id là ${id}`);
+    if (!collection) await run();
+
     const member = await collection.findOne({ _id: new ObjectId(id) });
+    console.log(`Đã lấy dữ liệu theo id là ${id}`);
+
     return { data: member };
 };
 
@@ -41,6 +43,8 @@ export const addMember = async ({
     name: string;
     age: number;
 }) => {
+    if (!collection) await run();
+
     const response = await collection.insertOne({
         _id: new ObjectId(),
         name,
@@ -48,20 +52,30 @@ export const addMember = async ({
     });
     const formatedResponse = JSON.parse(JSON.stringify(response));
     console.log('Đã thêm Member mới\n', formatedResponse);
+
     return { data: formatedResponse };
 };
 
 export const updateMember = async (member: MemberProps) => {
-    // TODO: Cập nhật dữ liệu có sẵn
+    if (!collection) await run();
+
+    const existingMember = await getMemberById(member._id);
+    if (!existingMember) {
+        console.log(`Không tìm thấy Member có id là ${member._id}`);
+        return;
+    }
+    const response = await collection.updateOne({
+        _id: new ObjectId(member._id),
+    }, {
+        $set: {
+            name: member.name,
+            age: member.age,
+        },
+    });
     console.log("Đã cập nhật Member");
-    const data = JSON.parse(JSON.stringify(await getMemberById(member._id)));
-    console.log(data);
-    const newMem = {
-        _id: data._id,
-        name: member.name,
-        age: member.age,
-    };
-    return { data: newMem };
+    console.log(response);
+
+    return { data: response };
 };
 
 export const deleteMemberById = async (id: string) => {
@@ -70,12 +84,9 @@ export const deleteMemberById = async (id: string) => {
         console.log(`Không tìm thấy Member có id là ${id}`);
         return;
     }
-    await collection.deleteOne({ _id: new ObjectId(id) });
+    const response = await collection.deleteOne({ _id: new ObjectId(id) });
 
     console.log(`Đã xóa Member có id là ${id}`);
-};
-
-export const deleteMemberByName = async (name: string) => {
-    // TODO: Xóa dữ liệu theo name
-    console.log(`Đã xóa Member có tên là ${name}`);
+    console.log(response);
+    return { data: response };
 };
